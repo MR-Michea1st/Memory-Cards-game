@@ -1,30 +1,33 @@
 
 
-function shuffle(arr1) {
+function shuffle(arr1 , arr2) {
   for (let i = 1 ; i < arr1.length ; i++) {
       let x = Math.floor(Math.random()*(i+1));
       [arr1[i] , arr1[x]] = [arr1[x] , arr1[i]];
+      [arr2[i] , arr2[x]] = [arr2[x] , arr2[i]];
+  
   }
 
-  return arr1;
+  return [arr1,arr2];
 }
 
 let cnt = 0 , card1 , card2;
 let cards = document.querySelectorAll('.cards');
-let srcs = [] , classes = [];
+let srcs = [] , alts = [];
 
 let imgs = document.getElementsByTagName('img');
 for (let i = 0 ; i < imgs.length ; i++) {
       srcs.push(imgs[i].src);
-      classes.push(cards[i].classList[2]);
+      alts.push(imgs[i].alt);
 }
 
-srcs = shuffle(srcs);
+[srcs,alts] = shuffle(srcs , alts);
 
 //console.log(srcs[2]);
 
 for (let i = 0 ; i < imgs.length ; i++) {
       imgs[i].src = srcs[i];
+      imgs[i].alt = alts[i];
 } 
 
 let c1 , c2;
@@ -37,23 +40,19 @@ for (let i = 0 ; i < cards.length ; i++) {
                   cnt++;
                   cards[i].classList.add('clicked');
                   
+                  let s , ss;
                   if (cnt === 1) {
                         c1 = cards[i];
-                        let s = cards[i].children[1].children[0].src;
-                        card1 = "";
-                        for (let i = 34 ; s[i] != '.' ; i++) card1+=s[i];
-                       // console.log(card1);
                   }
 
                   else if (cnt === 2) {
-                        let ss = cards[i].children[1].children[0].src;
-                        c2 = cards[i];
-                        card2 = "";
-                        for (let i = 34 ; ss[i] != '.' ; i++) card2+=ss[i];
-                       // console.log(card2);                       
+                       ss = cards[i].children[1].children[0].alt;
+                //       console.log(ss);
+                       s = c1.children[1].children[0].alt; 
+                       c2 = cards[i];
                         setTimeout(() => {
                               
-                              if (card1 === card2) {
+                              if (s == ss) {
                                     Win += 2;    
                                  if (Win === 12) {
                                     if(confirm('Congrats..Play Again?'))  location.reload();
